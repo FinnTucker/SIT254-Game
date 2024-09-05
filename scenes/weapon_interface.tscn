@@ -1,0 +1,20 @@
+[gd_scene load_steps=2 format=3 uid="uid://158wmkmb2ia0"]
+
+[sub_resource type="GDScript" id="GDScript_ee0u7"]
+script/source = "extends Node
+class_name WeaponInterface
+
+signal weapon_used
+
+func attack(target):
+	pass
+
+func equip(character):
+	pass
+
+func unequip():
+	pass
+"
+
+[node name="Node" type="Node"]
+script = SubResource("GDScript_ee0u7")

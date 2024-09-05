@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://b38mhrruek74w"]
+[gd_scene load_steps=18 format=3 uid="uid://b38mhrruek74w"]
 
 [ext_resource type="Script" path="res://scripts/game_manager.gd" id="1_14uqc"]
 [ext_resource type="PackedScene" uid="uid://b2j8dgmim1ja" path="res://scenes/player.tscn" id="1_jg7dg"]
@@ -7,7 +7,6 @@
 [ext_resource type="PackedScene" uid="uid://cuicnch3bacr5" path="res://scenes/platform.tscn" id="3_8wln6"]
 [ext_resource type="PackedScene" uid="uid://dicj8mjpalvq7" path="res://scenes/coin.tscn" id="4_w84s8"]
 [ext_resource type="PackedScene" uid="uid://c6jpdvt0njj8u" path="res://scenes/killzone.tscn" id="5_xcv6v"]
-[ext_resource type="PackedScene" uid="uid://bdjpf1067scb6" path="res://scenes/bullet.tscn" id="7_8sg27"]
 [ext_resource type="PackedScene" uid="uid://hlgxjgxnxfag" path="res://scenes/slime.tscn" id="7_22tdu"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_aga13"]
@@ -224,6 +223,21 @@ _data = {
 "move": SubResource("Animation_k6wwi")
 }
 
+[sub_resource type="Animation" id="Animation_y1l43"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(832, 16)]
+}
+
 [sub_resource type="Animation" id="Animation_r61y3"]
 resource_name = "new_animation"
 length = 1.5
@@ -241,21 +255,6 @@ tracks/0/keys = {
 "values": [Vector2(832, 16), Vector2(832, -42)]
 }
 
-[sub_resource type="Animation" id="Animation_y1l43"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(832, 16)]
-}
-
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_5r6v2"]
 _data = {
 "RESET": SubResource("Animation_y1l43"),
@@ -263,22 +262,6 @@ _data = {
 }
 
 [node name="Game" type="Node2D"]
-
-[node name="GameManager" type="Node" parent="."]
-unique_name_in_owner = true
-script = ExtResource("1_14uqc")
-
-[node name="ScoreLabel" type="Label" parent="GameManager"]
-offset_left = 1619.0
-offset_top = -407.0
-offset_right = 1878.0
-offset_bottom = -353.0
-theme_override_fonts/font = ExtResource("2_sqo0j")
-theme_override_font_sizes/font_size = 16
-text = "You Made it!
-You Collected X coins"
-horizontal_alignment = 1
-autowrap_mode = 2
 
 [node name="TileMap" type="TileMap" parent="."]
 position = Vector2(32, 28)
@@ -298,6 +281,65 @@ zoom = Vector2(4, 4)
 limit_bottom = 180
 limit_smoothed = true
 position_smoothing_enabled = true
+
+[node name="HUD" type="CanvasLayer" parent="Player/Camera2D"]
+script = ExtResource("1_14uqc")
+
+[node name="ProgressBar" type="ProgressBar" parent="Player/Camera2D/HUD"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -2.0
+offset_right = 50.0
+offset_bottom = 27.0
+grow_horizontal = 2
+value = 69.0
+metadata/_edit_use_anchors_ = true
+
+[node name="ScoreLabel" type="Label" parent="Player/Camera2D/HUD"]
+offset_right = 259.0
+offset_bottom = 54.0
+theme_override_fonts/font = ExtResource("2_sqo0j")
+theme_override_font_sizes/font_size = 16
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="Message" type="Label" parent="Player/Camera2D/HUD"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -175.0
+offset_top = -11.5
+offset_right = 305.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Avoid the enemies and obstacles to progress."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="StartButton" type="Button" parent="Player/Camera2D/HUD"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -100.0
+offset_top = -68.0
+offset_right = 100.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Start"
+
+[node name="MessageTimer" type="Timer" parent="Player/Camera2D/HUD"]
+wait_time = 2.0
+one_shot = true
 
 [node name="Killzone" parent="." instance=ExtResource("5_xcv6v")]
 position = Vector2(138, 92)
@@ -326,9 +368,6 @@ position = Vector2(596, 6)
 [node name="Coin6" parent="Coins" instance=ExtResource("4_w84s8")]
 position = Vector2(9, 22)
 
-[node name="Sprite2D" parent="Coins" instance=ExtResource("7_8sg27")]
-position = Vector2(148, -6)
-
 [node name="Platforms" type="Node" parent="."]
 
 [node name="Platform" parent="Platforms" instance=ExtResource("3_8wln6")]
@@ -351,13 +390,13 @@ autoplay = "new_animation"
 
 [node name="Enemies" type="Node" parent="."]
 
-[node name="Labels" type="Node" parent="."]
-
-[node name="Slime" parent="." instance=ExtResource("7_22tdu")]
+[node name="Slime" parent="Enemies" instance=ExtResource("7_22tdu")]
 position = Vector2(377, 59)
 
-[node name="Slime2" parent="." instance=ExtResource("7_22tdu")]
+[node name="Slime2" parent="Enemies" instance=ExtResource("7_22tdu")]
 position = Vector2(245, 60)
 
-[node name="Slime3" parent="." instance=ExtResource("7_22tdu")]
+[node name="Slime3" parent="Enemies" instance=ExtResource("7_22tdu")]
 position = Vector2(905, -52)
+
+[node name="Labels" type="Node" parent="."]

@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://bxdaa00rpysd8"]
+
+[ext_resource type="Script" path="res://scripts/ranged_weapon.gd" id="1_hqnmo"]
+[ext_resource type="Texture2D" uid="uid://chopph7h0jnkv" path="res://assets/sprites/solar_weapon.png" id="2_8jrch"]
+
+[node name="Node" type="Node"]
+script = ExtResource("1_hqnmo")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_8jrch")
+
+[node name="Marker2D" type="Marker2D" parent="Sprite2D"]
+position = Vector2(11, -1)
