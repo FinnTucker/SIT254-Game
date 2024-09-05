@@ -1,7 +1,5 @@
 extends CharacterBody2D
 
-var bullet = preload("res://scenes/bullet.tscn")
-var b
 const SPEED = 130.0
 const JUMP_VELOCITY = -300.0
 
@@ -13,7 +11,6 @@ var direction = Input.get_axis("move_left", "move_right")
 
 func _physics_process(delta):
 	move(delta)
-	shoot()
 	move_and_slide()
 
 func move(delta):
@@ -48,20 +45,3 @@ func move(delta):
 		velocity.x = direction * SPEED
 	else:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
-
-func shoot():
-	if Input.is_action_just_pressed("shoot"):
-		b = bullet.instantiate()
-		
-		# Set the bullet's initial position to the character's position
-		b.global_position = global_position + Vector2(10, 0)
-		
-		# Determine the direction based on the character's facing direction
-		var bullet_speed = 400.0  # Set the bullet speed
-		if animated_sprite.flip_h:
-			b.velocity = Vector2(-bullet_speed, 0)  # Shoot left
-		else:
-			b.velocity = Vector2(bullet_speed, 0)  # Shoot right
-		
-		# Add the bullet as a child of the current node
-		add_child(b)

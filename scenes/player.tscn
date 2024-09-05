@@ -1,7 +1,9 @@
-[gd_scene load_steps=26 format=3 uid="uid://b2j8dgmim1ja"]
+[gd_scene load_steps=28 format=3 uid="uid://b2j8dgmim1ja"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_ly45s"]
 [ext_resource type="Texture2D" uid="uid://bp2phwtbdyx0v" path="res://assets/sprites/knight.png" id="1_qt1c2"]
+[ext_resource type="Texture2D" uid="uid://chopph7h0jnkv" path="res://assets/sprites/solar_weapon.png" id="3_g61m8"]
+[ext_resource type="Script" path="res://scripts/solar_weapon.gd" id="4_iatmx"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_i71u8"]
 atlas = ExtResource("1_qt1c2")
@@ -185,3 +187,13 @@ autoplay = "idle"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -5)
 shape = SubResource("CircleShape2D_50erk")
+
+[node name="solar_weapon" type="Sprite2D" parent="."]
+position = Vector2(3.375, -3.375)
+scale = Vector2(0.402174, 0.35)
+texture = ExtResource("3_g61m8")
+offset = Vector2(4.555, 0)
+
+[node name="Marker2D" type="Marker2D" parent="solar_weapon"]
+position = Vector2(16.473, -1.78572)
+script = ExtResource("4_iatmx")
