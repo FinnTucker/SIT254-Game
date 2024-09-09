@@ -1,9 +1,7 @@
 [gd_scene load_steps=2 format=3 uid="uid://cwsau52hu0b64"]
 
-[ext_resource type="AudioStream" uid="uid://kkr7b4tfn7td" path="res://assets/music/time_for_adventure.mp3" id="1_q7oyg"]
+[ext_resource type="AudioStream" uid="uid://c4e5n3017kp4a" path="res://assets/music/Zander Noriega - Fight Them Until We Cant.mp3" id="1_r6omj"]
 
 [node name="Music" type="AudioStreamPlayer2D"]
-position = Vector2(1619, -407)
-stream = ExtResource("1_q7oyg")
+stream = ExtResource("1_r6omj")
 autoplay = true
-bus = &"Music"

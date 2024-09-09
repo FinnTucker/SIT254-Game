@@ -5,21 +5,23 @@ var solar_rifle_equipped = false
 var solar_rifle_cooldown = true
 var solar_projectile = preload("res://scenes/solar_projectile.tscn")
 var mouse_loc_from_player = null
-
+var radius = 5
 var inventory: Array = []
 const JUMP_VELOCITY = -300.0
 const SPEED = 130.0
+const WEAPON_SMOOTHING = 0.05
+const WEAPON_FOLLOW_SPEED = 10
 var direction = Input.get_axis("move_left", "move_right")
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
+@onready var solar_weapon: Sprite2D = $solar_weapon
+@onready var marker_2d: Marker2D = $solar_weapon/Marker2D
 
 func _physics_process(delta):
 	move(delta)
 	move_and_slide()
-	
 	mouse_loc_from_player = get_global_mouse_position() - self.position
-	print(mouse_loc_from_player)
 	
 	if Input.is_action_just_pressed("unequip_weapon"):
 		if solar_rifle_equipped:
@@ -28,12 +30,14 @@ func _physics_process(delta):
 			solar_rifle_equipped = true
 
 	var mouse_position = get_global_mouse_position()
-	$solar_weapon/Marker2D.look_at(mouse_position)
+	$solar_weapon.look_at(mouse_position)
+	var marker2d = marker_2d.get_position()
+	print(marker2d)
 	if Input.is_action_just_pressed("shoot") and solar_rifle_equipped and solar_rifle_cooldown:
 		solar_rifle_cooldown = false
 		var solar_projectile_instance = solar_projectile.instantiate()
-		solar_projectile_instance.rotation = $solar_weapon/Marker2D.rotation
-		solar_projectile_instance.global_position = $solar_weapon/Marker2D.global_position
+		solar_projectile_instance.rotation = $solar_weapon.rotation
+		solar_projectile_instance.global_position = $solar_weapon.global_position
 		add_child(solar_projectile_instance)
 		
 		await get_tree().create_timer(0.4).timeout
@@ -71,4 +75,15 @@ func move(delta):
 		velocity.x = direction * SPEED
 	else:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
-	
+
+func _process(delta: float) -> void:
+		var mouse_pos = get_global_mouse_position()
+		var player_pos = self.global_transform.origin 
+		var distance = player_pos.distance_to(mouse_pos) 
+		var mouse_dir = (mouse_pos - player_pos).normalized()
+		if distance > radius:
+			mouse_pos = player_pos + (mouse_dir * radius) + Vector2(0, -5)
+		
+		var angle = atan2(mouse_dir.y, mouse_dir.x)
+		$solar_weapon.global_transform.origin = mouse_pos
+		$solar_weapon.rotation = angle

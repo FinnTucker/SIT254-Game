@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://c4e5n3017kp4a"
+path="res://.godot/imported/Zander Noriega - Fight Them Until We Cant.mp3-a55b7ba17b58b425b9ba929150f8e7e6.mp3str"
+
+[deps]
+
+source_file="res://assets/music/Zander Noriega - Fight Them Until We Cant.mp3"
+dest_files=["res://.godot/imported/Zander Noriega - Fight Them Until We Cant.mp3-a55b7ba17b58b425b9ba929150f8e7e6.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
