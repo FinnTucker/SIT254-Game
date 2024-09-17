@@ -1,77 +1,8 @@
-[gd_scene load_steps=32 format=3 uid="uid://b2j8dgmim1ja"]
+[gd_scene load_steps=31 format=3 uid="uid://b2j8dgmim1ja"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_ly45s"]
 [ext_resource type="Texture2D" uid="uid://bp2phwtbdyx0v" path="res://assets/sprites/knight.png" id="1_qt1c2"]
 [ext_resource type="Texture2D" uid="uid://chopph7h0jnkv" path="res://assets/sprites/solar_weapon.png" id="3_g61m8"]
-
-[sub_resource type="GDScript" id="GDScript_l658j"]
-script/source = "class_name Health
-extends Node2D
-
-signal max_health_changed(diff: int)
-signal health_changed(diff: int)
-signal health_depleted
-
-@export var max_health: int = 100 : set = set_max_health, get = get_max_health
-@export var immortality: bool = false : set = set_immortality, get = get_immortality
-
-var immortality_timer: Timer = null
-
-@onready var health: int = max_health : set = set_health, get = get_health
-
-func set_max_health(value: int):
-	var clamped_value = 1 if value <= 0 else value
-	
-	if not clamped_value == max_health:
-		var difference = clamped_value - max_health
-		max_health = value
-		max_health_changed.emit(difference)
-		
-		if health > max_health:
-			health = max_health
-
-func get_max_health() -> int:
-	return max_health
-
-func set_immortality(value: bool):
-	immortality = value
-
-func get_immortality() -> bool:
-	return immortality
-
-func set_temporary_immortality(time: float):
-	if immortality_timer == null:
-		immortality_timer = Timer.new()
-		immortality_timer.one_shot = true
-		add_child(immortality_timer)
-		
-	if immortality_timer.timeout.is_connected(set_immortality):
-		immortality_timer.timeout.disconnect(set_immortality)
-	
-	immortality_timer.set_wait_time(time)
-	immortality_timer.timeout.connect(set_immortality.bind(false))
-	immortality = true
-	immortality_timer.start()
-
-
-
-func set_health(value: int):
-	if value < health and immortality:
-		return
-	
-	var clamped_value = clampi(value, 0, max_health)
-	
-	if clamped_value != health:
-		var difference = clamped_value - health
-		health = value
-		health_changed.emit(difference)
-		
-	if health ==0:
-		health_depleted.emit()
-
-func get_health() -> int:
-	return health
-"
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_dsa20"]
 atlas = ExtResource("1_qt1c2")
@@ -279,9 +210,6 @@ z_index = 5
 collision_layer = 2
 script = ExtResource("1_ly45s")
 
-[node name="Health" type="Node2D" parent="."]
-script = SubResource("GDScript_l658j")
-
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -12)
 sprite_frames = SubResource("SpriteFrames_4akx7")
@@ -300,3 +228,5 @@ offset = Vector2(4.555, 0)
 
 [node name="Marker2D" type="Marker2D" parent="solar_weapon"]
 position = Vector2(16.473, -1.78572)
+
+[node name="Timer" type="Timer" parent="."]

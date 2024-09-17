@@ -1,6 +1,10 @@
 extends CharacterBody2D
 class_name Player
 
+var max_health = 100
+var health = max_health
+
+
 var solar_rifle_equipped = false
 var solar_rifle_cooldown = true
 var solar_projectile = preload("res://scenes/solar_projectile.tscn")
@@ -17,6 +21,10 @@ var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var solar_weapon: Sprite2D = $solar_weapon
 @onready var marker_2d: Marker2D = $solar_weapon/Marker2D
+@onready var timer: Timer = $Timer
+
+func _ready():
+	add_to_group("Player")
 
 func _physics_process(delta):
 	move(delta)
@@ -32,7 +40,6 @@ func _physics_process(delta):
 	var mouse_position = get_global_mouse_position()
 	$solar_weapon.look_at(mouse_position)
 	var marker2d = marker_2d.get_position()
-	print(marker2d)
 	if Input.is_action_just_pressed("shoot") and solar_rifle_equipped and solar_rifle_cooldown:
 		solar_rifle_cooldown = false
 		var solar_projectile_instance = solar_projectile.instantiate()
@@ -87,3 +94,19 @@ func _process(delta: float) -> void:
 		var angle = atan2(mouse_dir.y, mouse_dir.x)
 		$solar_weapon.global_transform.origin = mouse_pos
 		$solar_weapon.rotation = angle
+
+func take_damage(amount):
+	health -= amount
+	if health <= 0:
+		die()
+	else:
+		print("player hurt! health remaining: ", health)
+
+
+func die():
+	print("You DIED")
+	Engine.time_scale = 0.5
+	get_node("CollisionShape2D").queue_free()
+	timer.start()
+	Engine.time_scale = 1
+	get_tree().reload_current_scene()

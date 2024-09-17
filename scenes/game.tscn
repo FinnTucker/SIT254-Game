@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://b38mhrruek74w"]
+[gd_scene load_steps=19 format=3 uid="uid://b38mhrruek74w"]
 
 [ext_resource type="Script" path="res://scripts/game_manager.gd" id="1_14uqc"]
 [ext_resource type="PackedScene" uid="uid://b2j8dgmim1ja" path="res://scenes/player.tscn" id="1_jg7dg"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://dicj8mjpalvq7" path="res://scenes/coin.tscn" id="4_w84s8"]
 [ext_resource type="PackedScene" uid="uid://c6jpdvt0njj8u" path="res://scenes/killzone.tscn" id="5_xcv6v"]
 [ext_resource type="PackedScene" uid="uid://hlgxjgxnxfag" path="res://scenes/slime.tscn" id="7_22tdu"]
+[ext_resource type="PackedScene" uid="uid://4xq5ainqwbjn" path="res://scenes/melee_enemy.tscn" id="9_m28qn"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_aga13"]
 texture = ExtResource("2_bd1qe")
@@ -390,9 +391,6 @@ autoplay = "new_animation"
 
 [node name="Enemies" type="Node" parent="."]
 
-[node name="Slime" parent="Enemies" instance=ExtResource("7_22tdu")]
-position = Vector2(377, 59)
-
 [node name="Slime2" parent="Enemies" instance=ExtResource("7_22tdu")]
 position = Vector2(245, 60)
 
@@ -400,3 +398,6 @@ position = Vector2(245, 60)
 position = Vector2(905, -52)
 
 [node name="Labels" type="Node" parent="."]
+
+[node name="CharacterBody2D" parent="." instance=ExtResource("9_m28qn")]
+position = Vector2(377, 60)
