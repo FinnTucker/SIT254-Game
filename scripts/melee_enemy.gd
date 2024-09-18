@@ -99,6 +99,7 @@ func take_damage(amount):
 	if health <= 0:
 		die()
 	else:
+		animated_sprite.play("hurt")
 		print("enemy hurt! health remaining: ", health)
 
 func die():

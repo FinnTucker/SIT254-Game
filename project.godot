@@ -24,6 +24,10 @@ Music="*res://scenes/music.tscn"
 version_control/plugin_name="GitPlugin"
 version_control/autoload_on_startup=true
 
+[global_group]
+
+Environment=""
+
 [input]
 
 jump={

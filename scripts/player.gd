@@ -34,8 +34,10 @@ func _physics_process(delta):
 	if Input.is_action_just_pressed("unequip_weapon"):
 		if solar_rifle_equipped:
 			solar_rifle_equipped = false
+			$solar_weapon.visible = false
 		else:
 			solar_rifle_equipped = true
+			$solar_weapon.visible = true
 
 	var mouse_position = get_global_mouse_position()
 	$solar_weapon.look_at(mouse_position)
@@ -43,9 +45,9 @@ func _physics_process(delta):
 	if Input.is_action_just_pressed("shoot") and solar_rifle_equipped and solar_rifle_cooldown:
 		solar_rifle_cooldown = false
 		var solar_projectile_instance = solar_projectile.instantiate()
-		solar_projectile_instance.rotation = $solar_weapon.rotation
-		solar_projectile_instance.global_position = $solar_weapon.global_position
-		add_child(solar_projectile_instance)
+		solar_projectile_instance.position = $solar_weapon/Marker2D.global_position
+		solar_projectile_instance.rotation = $solar_weapon.global_rotation
+		get_tree().current_scene.add_child(solar_projectile_instance)
 		
 		await get_tree().create_timer(0.4).timeout
 		solar_rifle_cooldown = true

@@ -100,7 +100,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"hurt",
-"speed": 5.0
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -127,6 +127,8 @@ animations = [{
 }]
 
 [node name="CharacterBody2D" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 3
 script = ExtResource("1_lrgfh")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -136,5 +138,6 @@ shape = SubResource("RectangleShape2D_rtx7w")
 [node name="enemy_animation" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -12)
 sprite_frames = SubResource("SpriteFrames_eyy14")
-animation = &"attack"
+animation = &"hurt"
 autoplay = "idle"
+frame_progress = 0.486161
