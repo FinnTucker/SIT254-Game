@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://b38mhrruek74w"]
+[gd_scene load_steps=20 format=3 uid="uid://b38mhrruek74w"]
 
 [ext_resource type="Script" path="res://scripts/game_manager.gd" id="1_14uqc"]
 [ext_resource type="PackedScene" uid="uid://b2j8dgmim1ja" path="res://scenes/player.tscn" id="1_jg7dg"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://c6jpdvt0njj8u" path="res://scenes/killzone.tscn" id="5_xcv6v"]
 [ext_resource type="PackedScene" uid="uid://hlgxjgxnxfag" path="res://scenes/slime.tscn" id="7_22tdu"]
 [ext_resource type="PackedScene" uid="uid://4xq5ainqwbjn" path="res://scenes/melee_enemy.tscn" id="9_m28qn"]
+[ext_resource type="PackedScene" uid="uid://bhqhawrpb5fil" path="res://scenes/enemy_health_bar.tscn" id="10_minh2"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_aga13"]
 texture = ExtResource("2_bd1qe")
@@ -283,65 +284,6 @@ limit_bottom = 180
 limit_smoothed = true
 position_smoothing_enabled = true
 
-[node name="HUD" type="CanvasLayer" parent="Player/Camera2D"]
-script = ExtResource("1_14uqc")
-
-[node name="ProgressBar" type="ProgressBar" parent="Player/Camera2D/HUD"]
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -2.0
-offset_right = 50.0
-offset_bottom = 27.0
-grow_horizontal = 2
-value = 100.0
-metadata/_edit_use_anchors_ = true
-
-[node name="ScoreLabel" type="Label" parent="Player/Camera2D/HUD"]
-offset_right = 259.0
-offset_bottom = 54.0
-theme_override_fonts/font = ExtResource("2_sqo0j")
-theme_override_font_sizes/font_size = 16
-text = "0"
-horizontal_alignment = 1
-vertical_alignment = 1
-autowrap_mode = 2
-
-[node name="Message" type="Label" parent="Player/Camera2D/HUD"]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -175.0
-offset_top = -11.5
-offset_right = 305.0
-offset_bottom = 11.5
-grow_horizontal = 2
-grow_vertical = 2
-text = "Avoid the enemies and obstacles to progress."
-horizontal_alignment = 1
-vertical_alignment = 1
-autowrap_mode = 2
-
-[node name="StartButton" type="Button" parent="Player/Camera2D/HUD"]
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -100.0
-offset_top = -68.0
-offset_right = 100.0
-offset_bottom = 32.0
-grow_horizontal = 2
-grow_vertical = 0
-text = "Start"
-
-[node name="MessageTimer" type="Timer" parent="Player/Camera2D/HUD"]
-wait_time = 2.0
-one_shot = true
-
 [node name="Killzone" parent="." instance=ExtResource("5_xcv6v")]
 position = Vector2(138, 92)
 
@@ -397,7 +339,93 @@ position = Vector2(245, 60)
 [node name="Slime3" parent="Enemies" instance=ExtResource("7_22tdu")]
 position = Vector2(905, -52)
 
+[node name="CharacterBody2D" parent="Enemies" instance=ExtResource("9_m28qn")]
+position = Vector2(377, 60)
+
 [node name="Labels" type="Node" parent="."]
 
-[node name="CharacterBody2D" parent="." instance=ExtResource("9_m28qn")]
-position = Vector2(377, 60)
+[node name="HUD" type="CanvasLayer" parent="."]
+script = ExtResource("1_14uqc")
+
+[node name="ScoreLabel" type="Label" parent="HUD"]
+offset_right = 259.0
+offset_bottom = 54.0
+theme_override_fonts/font = ExtResource("2_sqo0j")
+theme_override_font_sizes/font_size = 16
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="Message" type="Label" parent="HUD"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -175.0
+offset_top = -11.5
+offset_right = 305.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Avoid the enemies and obstacles to progress."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="StartButton" type="Button" parent="HUD"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -100.0
+offset_top = -68.0
+offset_right = 100.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Start"
+
+[node name="MessageTimer" type="Timer" parent="HUD"]
+wait_time = 2.0
+one_shot = true
+
+[node name="HealthBar" type="ProgressBar" parent="HUD"]
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 220.0
+offset_bottom = 50.0
+value = 100.0
+show_percentage = false
+
+[node name="NumericalHealth" type="Label" parent="HUD/HealthBar"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Health: 100"
+
+[node name="WeaponChargeBar" type="ProgressBar" parent="HUD"]
+offset_left = 20.0
+offset_top = 60.0
+offset_right = 220.0
+offset_bottom = 90.0
+value = 60.0
+show_percentage = false
+
+[node name="NumericalCharge" type="Label" parent="HUD/WeaponChargeBar"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Charge: 100"
+vertical_alignment = 1
+
+[node name="SunlightIcon" type="Sprite2D" parent="HUD"]
+
+[node name="ShadowIcon" type="Sprite2D" parent="HUD"]
+
+[node name="EnemyHealthBar" parent="HUD" instance=ExtResource("10_minh2")]
+
+[connection signal="value_changed" from="HUD/HealthBar" to="Player" method="_on_health_bar_value_changed"]
+[connection signal="value_changed" from="HUD/WeaponChargeBar" to="Player" method="_on_weapon_charge_bar_value_changed"]

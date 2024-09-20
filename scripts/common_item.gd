@@ -2,6 +2,7 @@ extends Area2D
 
 var item_name = "Common Item"
 var item_type = "common"
+@onready var hud: CanvasLayer = $HUD
 
 func _ready():
 	connect("body_entered", Callable(self, "_on_body_entered"))

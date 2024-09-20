@@ -1,7 +1,6 @@
 extends CharacterBody2D
-@onready var health_bar: ProgressBar = $CanvasLayer/HealthBar
-const RARE_ITEM = preload("res://scenes/rare_item.tscn")
-const COMMON_ITEM = preload("res://scenes/CommonItem.tscn")
+
+class_name enemy
 
 enum State {
 	IDLE,
@@ -9,6 +8,12 @@ enum State {
 	ATTACKING
 }
 # Variables
+const RARE_ITEM = preload("res://scenes/rare_item.tscn")
+const COMMON_ITEM = preload("res://scenes/common_item.tscn")
+const ENEMY_HEALTH_BAR = preload("res://scenes/enemy_health_bar.tscn")
+const SPEED = 200.0
+const JUMP_VELOCITY = -400.0
+
 @onready var animated_sprite: AnimatedSprite2D = $enemy_animation
 var state = State.IDLE
 var player = null
@@ -19,16 +24,34 @@ var attack_cooldown = 1.0
 var time_since_last_attack = 0.0
 var max_health = 100
 var health = max_health
-const SPEED = 200.0
-const JUMP_VELOCITY = -400.0
+
+@onready var health_label = null
+@onready var health_bar_ui = null
+@onready var health_bar = null
+@onready var camera: Camera2D = get_viewport().get_camera_2d()
 
 func _ready():
 	# Obtain a reference to the player node
 	player = get_node("/root/Game/Player")  # Adjust the path to your player node
 	add_to_group("Enemies")
+	var health_bar_instance = ENEMY_HEALTH_BAR.instantiate()
+	var hud_node = get_tree().root.get_node("/root/Game/HUD")
+	if hud_node:
+		hud_node.add_child(health_bar_instance)
+	else:
+		print("hud node not found")
+	
+	health_bar_ui = health_bar_instance
+	
+	health_bar = health_bar_ui.get_node("HealthBar")
+	health_label = health_bar_ui.get_node("HealthBar/HealthLabel")
+	
+	
 	health_bar.max_value = max_health
 	health_bar.value = health
-
+	health_label.text = str(health)
+	
+	# store reference for updating
 func _physics_process(delta: float) -> void:
 	# Add the gravity.
 	if not is_on_floor():
@@ -38,29 +61,29 @@ func _physics_process(delta: float) -> void:
 	
 	match state:
 		State.IDLE:
-			idle_behaviour(delta)
+			idle_behaviour()
 		State.CHASING:
-			chasing_behaviour(delta)
+			chasing_behaviour()
 		State.ATTACKING:
-			attacking_behaviour(delta)
+			attacking_behaviour()
 	
 	
 	update_state()
 	
 	move_and_slide()
 
-func idle_behaviour(delta):
+func idle_behaviour():
 	if not animated_sprite.is_playing() or animated_sprite.animation != "idle":
 		animated_sprite.play("idle")
 		velocity = Vector2.ZERO
 
-func chasing_behaviour(delta):
+func chasing_behaviour():
 	if not animated_sprite.is_playing() or animated_sprite.animation != "idle":
 		animated_sprite.play("chase")
 	var direction = (player.global_position - global_position).normalized()
 	velocity.x = direction.x * speed
 
-func attacking_behaviour(delta):
+func attacking_behaviour():
 	if not animated_sprite.is_playing() or animated_sprite.animation != "attack":
 		animated_sprite.play("attack")
 	if time_since_last_attack >= attack_cooldown:
@@ -98,7 +121,17 @@ func perform_attack():
 
 func take_damage(amount):
 	health -= amount
-	health_bar.value = health
+	health = clamp (health, 0, max_health)
+	
+	if health_bar:
+		health_bar.value = health
+	else:
+		push_error("HealthBar node not found in EnemyHealthBar")
+		
+	if health_label:
+		health_label.text = str(health)
+	else:
+		push_error("HealthLabel node not found.")
 	if health <= 0:
 		die()
 	else:

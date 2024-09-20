@@ -231,14 +231,8 @@ offset = Vector2(4.555, 0)
 position = Vector2(16.473, -1.78572)
 
 [node name="RayCastUpCharge" type="RayCast2D" parent="solar_weapon"]
-target_position = Vector2(0, -34.2857)
-
-[node name="CanvasLayer" type="CanvasLayer" parent="solar_weapon"]
-
-[node name="SolarCharge" type="ProgressBar" parent="solar_weapon/CanvasLayer"]
-offset_left = -13.0
-offset_top = -37.0
-offset_right = 45.0
-offset_bottom = -10.0
+position = Vector2(-17.4054, -82.8571)
+target_position = Vector2(0, -1000)
+collision_mask = 13
 
 [node name="Timer" type="Timer" parent="."]

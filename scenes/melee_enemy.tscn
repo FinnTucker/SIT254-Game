@@ -1,7 +1,8 @@
-[gd_scene load_steps=18 format=3 uid="uid://4xq5ainqwbjn"]
+[gd_scene load_steps=19 format=3 uid="uid://4xq5ainqwbjn"]
 
 [ext_resource type="Script" path="res://scripts/melee_enemy.gd" id="1_lrgfh"]
 [ext_resource type="Texture2D" uid="uid://2me0uatsgp3k" path="res://assets/sprites/slime_purple.png" id="2_sy83o"]
+[ext_resource type="PackedScene" uid="uid://bhqhawrpb5fil" path="res://scenes/enemy_health_bar.tscn" id="3_hkopj"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rtx7w"]
 size = Vector2(14, 15)
@@ -148,8 +149,4 @@ animation = &"attack"
 autoplay = "idle"
 frame_progress = 0.0704697
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
-
-[node name="HealthBar" type="ProgressBar" parent="CanvasLayer"]
-offset_right = 4.0
-offset_bottom = 27.0
+[node name="EnemyHealthBar" parent="." instance=ExtResource("3_hkopj")]
