@@ -8,9 +8,16 @@ var health = max_health
 var solar_rifle_equipped = false
 var solar_rifle_cooldown = true
 var solar_projectile = preload("res://scenes/solar_projectile.tscn")
+var max_solar_energy = 100
+var solar_energy = max_solar_energy
+var solar_recharge_rate = 10
+var solar_drain_rate = 20
+var is_in_sunlight = false
+
 var mouse_loc_from_player = null
 var radius = 5
 var inventory: Array = []
+
 const JUMP_VELOCITY = -300.0
 const SPEED = 130.0
 const WEAPON_SMOOTHING = 0.05
@@ -22,13 +29,16 @@ var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 @onready var solar_weapon: Sprite2D = $solar_weapon
 @onready var marker_2d: Marker2D = $solar_weapon/Marker2D
 @onready var timer: Timer = $Timer
+@onready var ray_cast_up_charge: RayCast2D = $solar_weapon/RayCastUpCharge
 
 func _ready():
 	add_to_group("Player")
+	
 
 func _physics_process(delta):
 	move(delta)
 	move_and_slide()
+	handle_solar_recharge(delta)
 	mouse_loc_from_player = get_global_mouse_position() - self.position
 	
 	if Input.is_action_just_pressed("unequip_weapon"):
@@ -112,3 +122,14 @@ func die():
 	timer.start()
 	Engine.time_scale = 1
 	get_tree().reload_current_scene()
+	
+func handle_solar_recharge(delta):
+	if is_in_sunlight:
+		solar_energy = min(solar_energy + solar_recharge_rate * delta, max_solar_energy)
+		#add visual feedback for charging
+	solar_energy = max(solar_energy - solar_drain_rate * delta, 0)
+
+func add_item_to_inventory(item_name: String, item_type: String) -> void:
+	inventory.append({"name": item_name, "type": item_type})
+	print("Added to inventory: ", item_name, "of type: ", item_type)
+	

@@ -1,6 +1,7 @@
 extends CharacterBody2D
-@onready var character_body_2d: CharacterBody2D = $"."
-
+@onready var health_bar: ProgressBar = $CanvasLayer/HealthBar
+const RARE_ITEM = preload("res://scenes/rare_item.tscn")
+const COMMON_ITEM = preload("res://scenes/CommonItem.tscn")
 
 enum State {
 	IDLE,
@@ -16,7 +17,8 @@ var attack_range = 20
 var detection_range = 100
 var attack_cooldown = 1.0
 var time_since_last_attack = 0.0
-var health = 100
+var max_health = 100
+var health = max_health
 const SPEED = 200.0
 const JUMP_VELOCITY = -400.0
 
@@ -24,6 +26,8 @@ func _ready():
 	# Obtain a reference to the player node
 	player = get_node("/root/Game/Player")  # Adjust the path to your player node
 	add_to_group("Enemies")
+	health_bar.max_value = max_health
+	health_bar.value = health
 
 func _physics_process(delta: float) -> void:
 	# Add the gravity.
@@ -92,10 +96,9 @@ func perform_attack():
 	else:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 
-	move_and_slide()
-
 func take_damage(amount):
 	health -= amount
+	health_bar.value = health
 	if health <= 0:
 		die()
 	else:
@@ -104,4 +107,18 @@ func take_damage(amount):
 
 func die():
 	print("enemy defeated")
-	character_body_2d.queue_free()
+	drop_item()
+	self.queue_free()
+	
+func drop_item():
+	var random_number = randi() % 100
+	if random_number < 15:
+		var rare_item = RARE_ITEM.instantiate()
+		rare_item.global_position = global_position
+		get_parent().add_child(rare_item)
+	else:
+		var common_item = COMMON_ITEM.instantiate()
+		common_item.global_position = global_position
+		get_parent().add_child(common_item)
+	
+		

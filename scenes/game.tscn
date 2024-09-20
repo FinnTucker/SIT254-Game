@@ -294,7 +294,7 @@ offset_left = -2.0
 offset_right = 50.0
 offset_bottom = 27.0
 grow_horizontal = 2
-value = 69.0
+value = 100.0
 metadata/_edit_use_anchors_ = true
 
 [node name="ScoreLabel" type="Label" parent="Player/Camera2D/HUD"]
