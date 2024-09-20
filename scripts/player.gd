@@ -2,6 +2,7 @@ extends CharacterBody2D
 class_name Player
 signal health_changed(new_health: int)
 signal solar_charge_changed(new_charge: int)
+signal sunlight_changed(is_in_sunlight: bool)
 
 var max_health = 100
 var health = max_health
@@ -12,10 +13,11 @@ var solar_rifle_cooldown = true
 var solar_projectile = preload("res://scenes/solar_projectile.tscn")
 var max_solar_energy = 100
 var solar_energy = max_solar_energy
-var solar_recharge_rate = 10
-var solar_drain_rate = 1
-var kickback_strength = 400.0
+var solar_recharge_rate = 8
+var solar_drain_rate = 2
 var is_in_sunlight = false
+
+var kickback_strength = 300.0
 
 var mouse_loc_from_player = null
 var radius = 5
@@ -23,11 +25,14 @@ var inventory: Array = []
 
 const JUMP_VELOCITY = -300.0
 const SPEED = 130.0
+
 const WEAPON_SMOOTHING = 0.05
 const WEAPON_FOLLOW_SPEED = 10
 var direction = Input.get_axis("move_left", "move_right")
+
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
+
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var solar_weapon: Sprite2D = $solar_weapon
 @onready var marker_2d: Marker2D = $solar_weapon/Marker2D
@@ -134,16 +139,21 @@ func die():
 	Engine.time_scale = 0.5
 	get_node("CollisionShape2D").queue_free()
 	timer.start()
-	Engine.time_scale = 1
-	get_tree().reload_current_scene()
+
+
 	
 func detect_sunlight():
 	ray_cast_up_charge.force_raycast_update()
+	var previous_sunlight_status = is_in_sunlight
 	
 	if ray_cast_up_charge.is_colliding():
 		is_in_sunlight = false
+		
 	else:
 		is_in_sunlight = true
+	
+	if is_in_sunlight != previous_sunlight_status:
+		emit_signal("sunlight_changed", is_in_sunlight)
 	
 func handle_solar_recharge(delta):
 	var previous_solar_energy = solar_energy
@@ -157,10 +167,17 @@ func handle_solar_recharge(delta):
 
 func add_item_to_inventory(item_name: String, item_type: String) -> void:
 	inventory.append({"name": item_name, "type": item_type})
-	print("Added to inventory: ", item_name, "of type: ", item_type)
+	print("Added to inventory: ", item_name, " of type: ", item_type)
 	
 func apply_kickback(mouse_position: Vector2):
+
 	var player_pos = self.global_position
 	var firing_dir = (mouse_position - player_pos).normalized()
 	var kickback_dir = -firing_dir
 	velocity += kickback_dir * kickback_strength
+	
+
+
+func _on_timer_timeout() -> void:
+	Engine.time_scale = 1
+	get_tree().reload_current_scene()

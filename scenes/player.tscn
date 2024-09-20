@@ -237,3 +237,5 @@ position = Vector2(14, -9)
 scale = Vector2(0.402174, 0.35)
 target_position = Vector2(0, -1000)
 collision_mask = 13
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

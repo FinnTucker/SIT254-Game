@@ -5,12 +5,16 @@ signal start_game
 
 var score = 0
 var player: Node = null
+
 @onready var score_label: Label = $ScoreLabel
 @onready var HUD: CanvasLayer = $"."
 @onready var health_bar: ProgressBar = $HealthBar
 @onready var health_label: Label = $HealthBar/NumericalHealth
 @onready var weapon_charge_bar: ProgressBar = $WeaponChargeBar
 @onready var weapon_charge_label: Label = $WeaponChargeBar/NumericalCharge
+@onready var sunlight_icon: Sprite2D = $SunlightIcon
+@onready var shadow_icon: Sprite2D = $ShadowIcon
+
 
 func _ready():
 	player = get_node("../Player")
@@ -25,6 +29,9 @@ func _ready():
 	
 	weapon_charge_label.text = str(player.solar_energy)
 	player.connect("solar_charge_changed", Callable(self, "_on_solar_charge_changed"))
+	
+	update_sunlight_icons(player.is_in_sunlight)
+	player.connect("sunlight_changed", Callable(self, "_on_sunlight_changed"))
 
 func _process(delta):
 	pass
@@ -36,6 +43,17 @@ func _on_health_changed(new_health: int):
 func _on_solar_charge_changed(new_charge: int):
 	weapon_charge_bar.value = new_charge
 	weapon_charge_label.text = str(new_charge)
+
+func _on_sunlight_changed(is_in_sunlight: bool):
+	update_sunlight_icons(is_in_sunlight)
+	
+func update_sunlight_icons(is_in_sunlight: bool):
+	if is_in_sunlight:
+		sunlight_icon.visible = true
+		shadow_icon.visible = false
+	else:
+		sunlight_icon.visible = false
+		shadow_icon.visible = true
 	
 func new_game():
 	$HUD.update_score(score)

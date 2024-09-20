@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://b38mhrruek74w"]
+[gd_scene load_steps=22 format=3 uid="uid://b38mhrruek74w"]
 
 [ext_resource type="Script" path="res://scripts/game_manager.gd" id="1_14uqc"]
 [ext_resource type="PackedScene" uid="uid://b2j8dgmim1ja" path="res://scenes/player.tscn" id="1_jg7dg"]
@@ -9,7 +9,9 @@
 [ext_resource type="PackedScene" uid="uid://c6jpdvt0njj8u" path="res://scenes/killzone.tscn" id="5_xcv6v"]
 [ext_resource type="PackedScene" uid="uid://hlgxjgxnxfag" path="res://scenes/slime.tscn" id="7_22tdu"]
 [ext_resource type="PackedScene" uid="uid://4xq5ainqwbjn" path="res://scenes/melee_enemy.tscn" id="9_m28qn"]
+[ext_resource type="Texture2D" uid="uid://1gm5eo6ywn3x" path="res://assets/sprites/Weather Icon Set/sunnyWeather.png" id="10_58pts"]
 [ext_resource type="PackedScene" uid="uid://bhqhawrpb5fil" path="res://scenes/enemy_health_bar.tscn" id="10_minh2"]
+[ext_resource type="Texture2D" uid="uid://bkqar302x36jv" path="res://assets/sprites/Weather Icon Set/cloudyWeather.png" id="11_mqynf"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_aga13"]
 texture = ExtResource("2_bd1qe")
@@ -411,7 +413,7 @@ offset_left = 20.0
 offset_top = 60.0
 offset_right = 220.0
 offset_bottom = 90.0
-value = 60.0
+value = 100.0
 show_percentage = false
 
 [node name="NumericalCharge" type="Label" parent="HUD/WeaponChargeBar"]
@@ -422,8 +424,12 @@ text = "Charge: 100"
 vertical_alignment = 1
 
 [node name="SunlightIcon" type="Sprite2D" parent="HUD"]
+position = Vector2(300, 50)
+texture = ExtResource("10_58pts")
 
 [node name="ShadowIcon" type="Sprite2D" parent="HUD"]
+position = Vector2(300, 50)
+texture = ExtResource("11_mqynf")
 
 [node name="EnemyHealthBar" parent="HUD" instance=ExtResource("10_minh2")]
 
