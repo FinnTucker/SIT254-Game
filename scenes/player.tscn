@@ -230,9 +230,10 @@ offset = Vector2(4.555, 0)
 [node name="Marker2D" type="Marker2D" parent="solar_weapon"]
 position = Vector2(16.473, -1.78572)
 
-[node name="RayCastUpCharge" type="RayCast2D" parent="solar_weapon"]
-position = Vector2(-17.4054, -82.8571)
+[node name="Timer" type="Timer" parent="."]
+
+[node name="RayCastUpCharge" type="RayCast2D" parent="."]
+position = Vector2(14, -9)
+scale = Vector2(0.402174, 0.35)
 target_position = Vector2(0, -1000)
 collision_mask = 13
-
-[node name="Timer" type="Timer" parent="."]

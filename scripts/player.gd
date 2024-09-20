@@ -32,7 +32,7 @@ var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 @onready var solar_weapon: Sprite2D = $solar_weapon
 @onready var marker_2d: Marker2D = $solar_weapon/Marker2D
 @onready var timer: Timer = $Timer
-@onready var ray_cast_up_charge: RayCast2D = $solar_weapon/RayCastUpCharge
+@onready var ray_cast_up_charge: RayCast2D = $RayCastUpCharge
 
 func _ready():
 	add_to_group("Player")
