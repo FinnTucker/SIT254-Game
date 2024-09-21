@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://b38mhrruek74w"]
+[gd_scene load_steps=23 format=3 uid="uid://b38mhrruek74w"]
 
 [ext_resource type="Script" path="res://scripts/game_manager.gd" id="1_14uqc"]
 [ext_resource type="PackedScene" uid="uid://b2j8dgmim1ja" path="res://scenes/player.tscn" id="1_jg7dg"]
@@ -7,11 +7,12 @@
 [ext_resource type="PackedScene" uid="uid://cuicnch3bacr5" path="res://scenes/platform.tscn" id="3_8wln6"]
 [ext_resource type="PackedScene" uid="uid://dicj8mjpalvq7" path="res://scenes/coin.tscn" id="4_w84s8"]
 [ext_resource type="PackedScene" uid="uid://c6jpdvt0njj8u" path="res://scenes/killzone.tscn" id="5_xcv6v"]
-[ext_resource type="PackedScene" uid="uid://hlgxjgxnxfag" path="res://scenes/slime.tscn" id="7_22tdu"]
 [ext_resource type="PackedScene" uid="uid://4xq5ainqwbjn" path="res://scenes/melee_enemy.tscn" id="9_m28qn"]
 [ext_resource type="Texture2D" uid="uid://1gm5eo6ywn3x" path="res://assets/sprites/Weather Icon Set/sunnyWeather.png" id="10_58pts"]
 [ext_resource type="PackedScene" uid="uid://bhqhawrpb5fil" path="res://scenes/enemy_health_bar.tscn" id="10_minh2"]
 [ext_resource type="Texture2D" uid="uid://bkqar302x36jv" path="res://assets/sprites/Weather Icon Set/cloudyWeather.png" id="11_mqynf"]
+[ext_resource type="Script" path="res://scripts/inventory_container.gd" id="12_b2blr"]
+[ext_resource type="Script" path="res://scenes/crafting_container.gd" id="13_f328t"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_aga13"]
 texture = ExtResource("2_bd1qe")
@@ -335,14 +336,17 @@ autoplay = "new_animation"
 
 [node name="Enemies" type="Node" parent="."]
 
-[node name="Slime2" parent="Enemies" instance=ExtResource("7_22tdu")]
-position = Vector2(245, 60)
-
-[node name="Slime3" parent="Enemies" instance=ExtResource("7_22tdu")]
-position = Vector2(905, -52)
-
 [node name="CharacterBody2D" parent="Enemies" instance=ExtResource("9_m28qn")]
 position = Vector2(377, 60)
+
+[node name="CharacterBody2D2" parent="Enemies" instance=ExtResource("9_m28qn")]
+position = Vector2(248, 60)
+
+[node name="CharacterBody2D3" parent="Enemies" instance=ExtResource("9_m28qn")]
+position = Vector2(790, 12)
+
+[node name="CharacterBody2D4" parent="Enemies" instance=ExtResource("9_m28qn")]
+position = Vector2(902, -52)
 
 [node name="Labels" type="Node" parent="."]
 
@@ -433,5 +437,39 @@ texture = ExtResource("11_mqynf")
 
 [node name="EnemyHealthBar" parent="HUD" instance=ExtResource("10_minh2")]
 
+[node name="InventoryContainer" type="Control" parent="HUD"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("12_b2blr")
+
+[node name="ItemList" type="ItemList" parent="HUD/InventoryContainer"]
+layout_mode = 0
+offset_right = 400.0
+offset_bottom = 400.0
+
+[node name="CraftingContainer" type="Control" parent="HUD"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("13_f328t")
+
+[node name="CraftingList" type="VBoxContainer" parent="HUD/CraftingContainer"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="CraftHealthPackButton" type="Button" parent="HUD/CraftingContainer/CraftingList"]
+layout_mode = 2
+text = "Craft Health Pack"
+
+[node name="CraftDamageBoostButton" type="Button" parent="HUD/CraftingContainer/CraftingList"]
+layout_mode = 2
+text = "Craft Damage Boost"
+
 [connection signal="value_changed" from="HUD/HealthBar" to="Player" method="_on_health_bar_value_changed"]
 [connection signal="value_changed" from="HUD/WeaponChargeBar" to="Player" method="_on_weapon_charge_bar_value_changed"]
+[connection signal="pressed" from="HUD/CraftingContainer/CraftingList/CraftHealthPackButton" to="Player" method="_on_craft_health_pack_button_pressed"]
+[connection signal="pressed" from="HUD/CraftingContainer/CraftingList/CraftDamageBoostButton" to="Player" method="_on_craft_damage_boost_button_pressed"]

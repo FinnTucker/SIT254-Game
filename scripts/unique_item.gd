@@ -1,7 +1,7 @@
 extends Area2D
 
-var item_name = "Common Item"
-var item_type = "common"
+var item_name = "Unique Item"
+var item_type = "unique"
 
 
 func _on_body_entered(body: Node2D) -> void:

@@ -1,7 +1,4 @@
-extends Node
-
-signal start_game
-
+extends CanvasLayer
 
 var score = 0
 var player: Node = null
@@ -14,7 +11,11 @@ var player: Node = null
 @onready var weapon_charge_label: Label = $WeaponChargeBar/NumericalCharge
 @onready var sunlight_icon: Sprite2D = $SunlightIcon
 @onready var shadow_icon: Sprite2D = $ShadowIcon
+@onready var inventory_container: Control = $InventoryContainer
+@onready var crafting_container: Control = $CraftingContainer
 
+
+var menu_visible: bool = false
 
 func _ready():
 	player = get_node("../Player")
@@ -34,7 +35,21 @@ func _ready():
 	player.connect("sunlight_changed", Callable(self, "_on_sunlight_changed"))
 
 func _process(delta):
-	pass
+	if Input.is_action_just_pressed("toggle_menu"):
+		print("toggling menu state. current state before toggle: ", menu_visible)
+		_toggle_menu()
+
+func _toggle_menu():
+	if menu_visible == false:
+		menu_visible = true
+	else:
+		menu_visible = false
+	print("toggling menu: new state: ", menu_visible)
+	
+	inventory_container.visible = menu_visible
+	crafting_container.visible = menu_visible
+	
+
 
 func _on_health_changed(new_health: int):
 	health_bar.value = new_health
@@ -55,12 +70,7 @@ func update_sunlight_icons(is_in_sunlight: bool):
 		sunlight_icon.visible = false
 		shadow_icon.visible = true
 	
-func new_game():
-	$HUD.update_score(score)
-	$HUD.show_message("Get Ready")
-	
-func game_over():
-	$HUD.show_game_over()
+
 
 func add_point():
 	score += 1

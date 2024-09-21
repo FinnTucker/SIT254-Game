@@ -1,8 +1,7 @@
 extends Area2D
 
-var item_name = "Common Item"
-var item_type = "common"
-
+var item_name = "Health Pack"
+var item_type = "uncommon"
 
 func _on_body_entered(body: Node2D) -> void:
 	if body.is_in_group("Player"):

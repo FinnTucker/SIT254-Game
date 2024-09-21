@@ -13,7 +13,7 @@ var solar_rifle_cooldown = true
 var solar_projectile = preload("res://scenes/solar_projectile.tscn")
 var max_solar_energy = 100
 var solar_energy = max_solar_energy
-var solar_recharge_rate = 8
+var solar_recharge_rate = 20
 var solar_drain_rate = 2
 var is_in_sunlight = false
 
@@ -21,7 +21,17 @@ var kickback_strength = 300.0
 
 var mouse_loc_from_player = null
 var radius = 5
-var inventory: Array = []
+var inventory: Dictionary = {}
+var crafting_recipes = {
+	"Health Pack": {
+		"Common Item": 2,
+		"Rare Item": 1
+	},
+	"Damage Boost": {
+		"Rare Item": 1,
+		"Unique Item": 1
+	}
+}
 
 const JUMP_VELOCITY = -300.0
 const SPEED = 130.0
@@ -166,9 +176,53 @@ func handle_solar_recharge(delta):
 		emit_signal("solar_charge_changed", solar_energy)
 
 func add_item_to_inventory(item_name: String, item_type: String) -> void:
-	inventory.append({"name": item_name, "type": item_type})
+	if item_name in inventory:
+		inventory[item_name]["quantity"] +=1
+	else:
+		inventory[item_name] = {"type": item_type, "quantity": 1}
 	print("Added to inventory: ", item_name, " of type: ", item_type)
+	update_inventory_ui()
 	
+func remove_item_from_inventory(item_name: String, quantity: int =1) -> bool:
+	if item_name in inventory and inventory[item_name]["quantity"] >= quantity:
+		inventory[item_name]["quantity"] -= quantity
+		if inventory[item_name]["quantity"] <= 0:
+			inventory.erase(item_name)
+		print("Removed", quantity, " of ", item_name, " from inventory.")
+		update_inventory_ui()
+		return true
+	else:
+		print("Item not found in inventory or insufficient quantity.")
+		return false
+
+func craft_item(item_name: String) -> bool:
+	if not crafting_recipes.has(item_name):
+		print("Recipe not found for item: ", item_name)
+		return false
+	
+	var recipe = crafting_recipes[item_name]
+	
+	for ingredient_name in recipe.keys():
+		var required_quantity = recipe[ingredient_name]
+		if not inventory.has(ingredient_name) or inventory[ingredient_name]["quantity"] < required_quantity:
+			print("Not enough ", ingredient_name, " to craft ", item_name)
+			return false
+			
+	for ingredient_name in recipe.keys():
+		remove_item_from_inventory(ingredient_name, recipe[ingredient_name])
+		
+	add_item_to_inventory(item_name, "Crafted")
+	print("Successfully crafted: ", item_name)
+	
+	var hud = get_node("../HUD/InventoryContainer")
+	hud.update_inventory_ui(inventory)
+	return true
+		
+
+func update_inventory_ui():
+	var ui_node = get_node("../HUD/InventoryContainer")
+	ui_node.update_inventory_ui(inventory)
+
 func apply_kickback(mouse_position: Vector2):
 
 	var player_pos = self.global_position
@@ -181,3 +235,12 @@ func apply_kickback(mouse_position: Vector2):
 func _on_timer_timeout() -> void:
 	Engine.time_scale = 1
 	get_tree().reload_current_scene()
+
+
+func _on_craft_health_pack_button_pressed() -> void:
+	craft_item("Health Pack")
+
+
+
+func _on_craft_damage_boost_button_pressed() -> void:
+	craft_item("Damage Boost")

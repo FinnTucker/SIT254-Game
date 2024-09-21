@@ -1,0 +1,37 @@
+[gd_scene load_steps=6 format=3 uid="uid://ch0q43gtnkv10"]
+
+[ext_resource type="Script" path="res://scripts/health_pack.gd" id="1_2klfg"]
+[ext_resource type="Texture2D" uid="uid://bdl224qt31gk1" path="res://assets/sprites/fruit.png" id="1_52rfn"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_x5ipe"]
+atlas = ExtResource("1_52rfn")
+region = Rect2(16, 48, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_a5bnl"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_x5ipe")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3t8jy"]
+size = Vector2(9.5, 16)
+
+[node name="Area2D" type="Area2D"]
+collision_layer = 16
+collision_mask = 2
+script = ExtResource("1_2klfg")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -8)
+sprite_frames = SubResource("SpriteFrames_a5bnl")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0.25, -8)
+shape = SubResource("RectangleShape2D_3t8jy")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

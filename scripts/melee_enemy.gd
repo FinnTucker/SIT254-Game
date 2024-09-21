@@ -10,6 +10,8 @@ enum State {
 # Variables
 const RARE_ITEM = preload("res://scenes/rare_item.tscn")
 const COMMON_ITEM = preload("res://scenes/common_item.tscn")
+const UNIQUE_ITEM = preload("res://scenes/unique_item.tscn")
+const HEALTH_PACK = preload("res://scenes/health_pack.tscn")
 const ENEMY_HEALTH_BAR = preload("res://scenes/enemy_health_bar.tscn")
 const SPEED = 200.0
 const JUMP_VELOCITY = -400.0
@@ -148,10 +150,18 @@ func drop_item():
 	if random_number < 15:
 		var rare_item = RARE_ITEM.instantiate()
 		rare_item.global_position = global_position
-		get_parent().add_child(rare_item)
-	else:
+		get_parent().call_deferred("add_child", rare_item)
+	elif random_number < 65:
 		var common_item = COMMON_ITEM.instantiate()
 		common_item.global_position = global_position
-		get_parent().add_child(common_item)
+		get_parent().call_deferred("add_child", common_item)
+	elif random_number < 95:
+		var health_pack = HEALTH_PACK.instantiate()
+		health_pack.global_position = global_position
+		get_parent().call_deferred("add_child", health_pack)
+	else:
+		var unique_item = UNIQUE_ITEM.instantiate()
+		unique_item.global_position = global_position
+		get_parent().call_deferred("add_child", unique_item)
 	
 		
