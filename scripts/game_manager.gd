@@ -18,6 +18,7 @@ var player: Node = null
 var menu_visible: bool = false
 
 func _ready():
+	
 	player = get_node("../Player")
 	health_bar.max_value = player.max_health
 	health_bar.value = player.health

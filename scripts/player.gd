@@ -48,11 +48,16 @@ var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 @onready var marker_2d: Marker2D = $solar_weapon/Marker2D
 @onready var timer: Timer = $Timer
 @onready var ray_cast_up_charge: RayCast2D = $RayCastUpCharge
+@onready var item_list: ItemList = $"../HUD/InventoryContainer/ItemList"
 
 func _ready():
 	add_to_group("Player")
 	health = max_health
 	solar_energy = max_solar_energy
+	if item_list == null:
+		print("error: item list null")
+	else:
+		print("itemlist initialised correctly")
 
 func _physics_process(delta):
 	move(delta)
@@ -181,7 +186,7 @@ func add_item_to_inventory(item_name: String, item_type: String) -> void:
 	else:
 		inventory[item_name] = {"type": item_type, "quantity": 1}
 	print("Added to inventory: ", item_name, " of type: ", item_type)
-	update_inventory_ui()
+	update_inventory_ui(inventory)
 	
 func remove_item_from_inventory(item_name: String, quantity: int =1) -> bool:
 	if item_name in inventory and inventory[item_name]["quantity"] >= quantity:
@@ -189,7 +194,7 @@ func remove_item_from_inventory(item_name: String, quantity: int =1) -> bool:
 		if inventory[item_name]["quantity"] <= 0:
 			inventory.erase(item_name)
 		print("Removed", quantity, " of ", item_name, " from inventory.")
-		update_inventory_ui()
+		update_inventory_ui(inventory)
 		return true
 	else:
 		print("Item not found in inventory or insufficient quantity.")
@@ -211,7 +216,7 @@ func craft_item(item_name: String) -> bool:
 	for ingredient_name in recipe.keys():
 		remove_item_from_inventory(ingredient_name, recipe[ingredient_name])
 		
-	add_item_to_inventory(item_name, "Crafted")
+	add_item_to_inventory(item_name, "usable")
 	print("Successfully crafted: ", item_name)
 	
 	var hud = get_node("../HUD/InventoryContainer")
@@ -219,7 +224,7 @@ func craft_item(item_name: String) -> bool:
 	return true
 		
 
-func update_inventory_ui():
+func update_inventory_ui(inventory: Dictionary):
 	var ui_node = get_node("../HUD/InventoryContainer")
 	ui_node.update_inventory_ui(inventory)
 
@@ -229,18 +234,73 @@ func apply_kickback(mouse_position: Vector2):
 	var firing_dir = (mouse_position - player_pos).normalized()
 	var kickback_dir = -firing_dir
 	velocity += kickback_dir * kickback_strength
-	
-
 
 func _on_timer_timeout() -> void:
 	Engine.time_scale = 1
 	get_tree().reload_current_scene()
 
-
 func _on_craft_health_pack_button_pressed() -> void:
 	craft_item("Health Pack")
 
-
-
 func _on_craft_damage_boost_button_pressed() -> void:
 	craft_item("Damage Boost")
+
+func use_item(item_name: String):
+	if inventory.has(item_name):
+		var item_data = inventory[item_name]
+		
+		if item_data["type"] == "usable":
+			if item_name == "Health Pack":
+				use_health_pack()
+			elif item_name == "Damage Boost":
+				use_damage_boost()
+			else:
+				print("no logic define for this item.")
+		else:
+			print(item_name, " is a crafting item and cannot be used directly.")
+	else:
+		print("item not found in inventory (method use_item).")
+
+func use_health_pack():
+	if inventory.has("Health Pack"):
+		if inventory["Health Pack"]["quantity"] > 0:
+			health = min(health + 30, max_health)
+			
+			remove_item_from_inventory("Health Pack", 1)
+			
+			emit_signal("health_changed", health)
+			print("used health pack. new health: ", health)
+		else:
+			print("no health packs available")
+	else:
+		print("no health packs in inventory.")
+
+func use_damage_boost():
+	pass
+
+
+func _on_item_list_item_selected(index: int) -> void:
+	var item_name = item_list.get_item_text(index)
+	handle_item_selection(item_name)
+	
+func handle_item_selection(item_name: String):
+	var name_parts = item_name.split(" x")
+	item_name = name_parts[0]
+	
+	if item_name.begins_with("[Usable] "):
+		item_name = item_name.substr(9, item_name.length() - 9)
+	elif item_name.begins_with("[Crafting] "):
+		item_name = item_name.substr(9, item_name.length() - 11)
+	print("selected item from item list: ", item_name)
+	if inventory.has(item_name):
+		var item_data = inventory[item_name]
+	
+		if item_data["type"] == "usable":
+			print(item_name, " is a usable item.")
+			use_item(item_name)
+		elif item_data["type"] == "crafting":
+			print(item_name, " is a crafting material and cannot be used directly")
+		else:
+			print("unkown item type")
+	else:
+		print("item not found in inventory (method handle_item_selection)")

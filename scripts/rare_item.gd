@@ -1,7 +1,8 @@
 extends Area2D
 
 var item_name = "Rare Item"
-var item_type = "rare"
+var item_type = "crafting"
+
 
 func _on_body_entered(body: Node2D) -> void:
 	if body.is_in_group("Player"):

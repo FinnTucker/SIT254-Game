@@ -9,7 +9,10 @@ func update_inventory_ui(inventory: Dictionary):
 		var item_quantity = item_data["quantity"]
 		var item_text = item_name + " x" + str(item_quantity)
 		
-		item_list.add_item(item_text)
+		if item_data["type"] == "usable":
+			item_list.add_item("[Usable] " + item_text)
+		elif item_data["type"] == "crafting":
+			item_list.add_item("[Crafting] " + item_text)
 		
 		if item_data.has("icon"):
 			item_list.set_item_icon(item_list.get_item_count() - 1, item_data["icon"])

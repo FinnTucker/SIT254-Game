@@ -440,7 +440,8 @@ texture = ExtResource("11_mqynf")
 [node name="InventoryContainer" type="Control" parent="HUD"]
 layout_mode = 3
 anchors_preset = 0
-offset_right = 40.0
+offset_left = 223.0
+offset_right = 263.0
 offset_bottom = 40.0
 script = ExtResource("12_b2blr")
 
@@ -452,8 +453,10 @@ offset_bottom = 400.0
 [node name="CraftingContainer" type="Control" parent="HUD"]
 layout_mode = 3
 anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_left = 413.0
+offset_top = 23.0
+offset_right = 453.0
+offset_bottom = 63.0
 script = ExtResource("13_f328t")
 
 [node name="CraftingList" type="VBoxContainer" parent="HUD/CraftingContainer"]
@@ -471,5 +474,6 @@ text = "Craft Damage Boost"
 
 [connection signal="value_changed" from="HUD/HealthBar" to="Player" method="_on_health_bar_value_changed"]
 [connection signal="value_changed" from="HUD/WeaponChargeBar" to="Player" method="_on_weapon_charge_bar_value_changed"]
+[connection signal="item_selected" from="HUD/InventoryContainer/ItemList" to="Player" method="_on_item_list_item_selected"]
 [connection signal="pressed" from="HUD/CraftingContainer/CraftingList/CraftHealthPackButton" to="Player" method="_on_craft_health_pack_button_pressed"]
 [connection signal="pressed" from="HUD/CraftingContainer/CraftingList/CraftDamageBoostButton" to="Player" method="_on_craft_damage_boost_button_pressed"]
