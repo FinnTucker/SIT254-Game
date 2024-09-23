@@ -276,7 +276,17 @@ func use_health_pack():
 		print("no health packs in inventory.")
 
 func use_damage_boost():
-	pass
+	if inventory.has("Damage Boost"):
+		if inventory["Damage Boost"]["quantity"] > 0:
+			
+			remove_item_from_inventory("Damage Boost", 1)
+			
+			print("used damage boost. damage increased")
+		else:
+			print("no damage boost available")
+	else:
+		print("no damage boost in inventory")
+			
 
 
 func _on_item_list_item_selected(index: int) -> void:

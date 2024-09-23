@@ -1,7 +1,7 @@
 extends Area2D
 
 var item_name = "Unique Item"
-var item_type = "unique"
+var item_type = "crafting"
 
 
 

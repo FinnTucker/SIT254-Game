@@ -1,0 +1,71 @@
+[gd_scene load_steps=5 format=3 uid="uid://daupk1bei0fca"]
+
+[ext_resource type="Script" path="res://scripts/intro_scene.gd" id="1_7lqw3"]
+
+[sub_resource type="Animation" id="Animation_v2u8b"]
+resource_name = "text_fade_in"
+length = 2.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Label:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_xv86w"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Label:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_qqvhn"]
+_data = {
+"RESET": SubResource("Animation_xv86w"),
+"text_fade_in": SubResource("Animation_v2u8b")
+}
+
+[node name="IntroScene" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 6.0
+offset_top = 4.00002
+offset_right = 46.0
+offset_bottom = 44.0
+scale = Vector2(28.7621, 15.8904)
+script = ExtResource("1_7lqw3")
+
+[node name="Label" type="Label" parent="."]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_left = 0.17384
+offset_top = 10.8871
+offset_right = 555.174
+offset_bottom = 85.8871
+scale = Vector2(0.0711074, 0.235108)
+text = "\"After years of fighting as a combat engineer, all he wanted was peace. 
+ But the forest he called home is under attack by a ruthless corporation.  Now, once again, he must fight back to protect what remains.\"
+"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_qqvhn")
+}
+autoplay = "text_fade_in"

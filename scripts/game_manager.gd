@@ -34,6 +34,9 @@ func _ready():
 	
 	update_sunlight_icons(player.is_in_sunlight)
 	player.connect("sunlight_changed", Callable(self, "_on_sunlight_changed"))
+	
+	inventory_container.visible = menu_visible
+	crafting_container.visible = menu_visible
 
 func _process(delta):
 	if Input.is_action_just_pressed("toggle_menu"):
