@@ -52,6 +52,7 @@ var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
 func _ready():
 	add_to_group("Player")
+	$solar_weapon.visible = false
 	health = max_health
 	solar_energy = max_solar_energy
 	if item_list == null:

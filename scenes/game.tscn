@@ -539,6 +539,15 @@ offset_bottom = -106.0
 text = "Beyond Sprint 4: Biomes, Upgrades,
  Narrative & Progression"
 
+[node name="Label5" type="Label" parent="."]
+offset_left = 1774.0
+offset_top = -185.0
+offset_right = 2031.0
+offset_bottom = -110.0
+text = "Crafting Recipes:
+Health Pack: 2 Common + 1 Rare
+Damage Boost: 1 Rare + 1 Unique"
+
 [connection signal="value_changed" from="HUD/HealthBar" to="Player" method="_on_health_bar_value_changed"]
 [connection signal="value_changed" from="HUD/WeaponChargeBar" to="Player" method="_on_weapon_charge_bar_value_changed"]
 [connection signal="item_selected" from="HUD/InventoryContainer/ItemList" to="Player" method="_on_item_list_item_selected"]
